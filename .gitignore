@@ -1,0 +1,8 @@
+/.idea
+/.vscode
+/docker/web/logs
+./.idea
+./app
+.env
+./docker/database
+/.ai/
