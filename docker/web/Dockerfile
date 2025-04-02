@@ -1,21 +1,21 @@
-FROM phpdockerio/php:8.0-fpm
+FROM phpdockerio/php:8.2-fpm
 
 # Обновляем пакеты и устанавливаем необходимые библиотеки
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
-    php8.0-memcached \
-    php8.0-memcache \
-    php8.0-mbstring \
-    php8.0-mysql \
-    php8.0-intl \
-    php8.0-interbase \
-    php8.0-redis \
-    php8.0-soap \
-    php8.0-gd \
-    php8.0-imagick \
-    php8.0-opcache \
-    php8.0-zip \
-    php-pear php8.0-dev libmcrypt-dev gcc make autoconf libc-dev pkg-config \
+    php8.2-memcached \
+    php8.2-memcache \
+    php8.2-mbstring \
+    php8.2-mysql \
+    php8.2-intl \
+    php8.2-interbase \
+    php8.2-redis \
+    php8.2-soap \
+    php8.2-gd \
+    php8.2-imagick \
+    php8.2-opcache \
+    php8.2-zip \
+    php-pear php8.2-dev libmcrypt-dev gcc make autoconf libc-dev pkg-config \
     && pecl install mcrypt-1.0.6 \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
@@ -34,9 +34,8 @@ RUN chmod 0644 /etc/cron.d/crontab && \
 
 # Установка Composer
 ENV COMPOSER_HOME=/composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN chown -R www-data:www-data /composer
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /bin/composer
 
 WORKDIR "/app"
 

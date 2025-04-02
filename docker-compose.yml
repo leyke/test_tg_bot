@@ -6,7 +6,6 @@ services:
       dockerfile: ${PATH_TO_DOCKERFILE}
     volumes:
       - ./app:/app:rw
-      - ./frontend/build:/var/www/shared/build:rw
       - ./docker/web/php.ini:/etc/php/8.0/fpm/conf.d/90-php.ini
       - ./docker/web/php.ini:/etc/php/8.0/cli/conf.d/90-php.ini
       - ./docker/web/logs/php:/var/log/php/:rw
@@ -40,7 +39,7 @@ services:
         condition: service_started
 
   mysql:
-    image: mysql:9.2.0
+    image: mysql:8.0.41
     container_name: mysql-${PROJECT_NAME}
     environment:
       TZ: ${PHP_DATE_TIMEZONE}
