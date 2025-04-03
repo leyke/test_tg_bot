@@ -1,7 +1,8 @@
 <?php
+$params = [];
 
-return [
-    'adminEmail' => 'admin@example.com',
-    'senderEmail' => 'noreply@example.com',
-    'senderName' => 'Example.com mailer',
-];
+$params['corsOrigin'] = !empty(env('CORS_ALLOW_ORIGIN')) ? explode(',', env('CORS_ALLOW_ORIGIN')) : [];
+
+$params['tgBotToken'] = env('TG_BOT_TOKEN');
+
+return $params;

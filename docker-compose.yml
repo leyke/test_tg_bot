@@ -6,8 +6,8 @@ services:
       dockerfile: ${PATH_TO_DOCKERFILE}
     volumes:
       - ./app:/app:rw
-      - ./docker/web/php.ini:/etc/php/8.0/fpm/conf.d/90-php.ini
-      - ./docker/web/php.ini:/etc/php/8.0/cli/conf.d/90-php.ini
+      - ./docker/web/php.ini:/etc/php/8.2/fpm/conf.d/90-php.ini
+      - ./docker/web/php.ini:/etc/php/8.2/cli/conf.d/90-php.ini
       - ./docker/web/logs/php:/var/log/php/:rw
       - ./docker/web/logs/nginx:/var/log/nginx/:rw
       - ./docker/web/logs/supervisor:/var/log/supervisor/:rw

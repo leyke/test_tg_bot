@@ -6,10 +6,22 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log',
+        'webhook',
+        'telegram'
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+    ],
+    'modules' => [
+        'telegram' => [
+            'class' => 'app\modules\telegram\src\Module',
+        ],
+        'webhook' => [
+            'class' => 'app\modules\webhook\src\Module',
+        ]
     ],
     'components' => [
         'request' => [
@@ -42,14 +54,12 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,
             'showScriptName' => false,
-            'rules' => [
-            ],
+            'rules' => []
         ],
-        */
     ],
     'params' => $params,
 ];

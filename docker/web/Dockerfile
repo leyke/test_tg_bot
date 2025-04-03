@@ -34,8 +34,9 @@ RUN chmod 0644 /etc/cron.d/crontab && \
 
 # Установка Composer
 ENV COMPOSER_HOME=/composer
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN chown -R www-data:www-data /composer
 
 WORKDIR "/app"
 
