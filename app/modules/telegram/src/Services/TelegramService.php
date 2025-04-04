@@ -2,31 +2,28 @@
 
 namespace app\modules\telegram\src\Services;
 
-use Telegram\Bot\Api;
-use Telegram\Bot\Exceptions\TelegramSDKException;
-use Telegram\Bot\Objects\User;
+
+use Vjik\TelegramBot\Api\FailResult;
+use Vjik\TelegramBot\Api\TelegramBotApi;
+use Vjik\TelegramBot\Api\Transport\Curl\CurlTransport;
+use Vjik\TelegramBot\Api\Type\User;
 use Yii;
 use yii\base\Component;
 
 class TelegramService extends Component
 {
-    private Api $service;
+    private TelegramBotApi $api;
 
-    /**
-     * @throws TelegramSDKException
-     */
     public function __construct($config = [])
     {
         parent::__construct($config);
+        $transport = new CurlTransport();
 
-        $this->service = new Api(Yii::$app->params['tgBotToken']);
+        $this->api = new TelegramBotApi(Yii::$app->params['tgBotToken'], transport: $transport);
     }
 
-    /**
-     * @throws TelegramSDKException
-     */
-    public function me(): User
+    public function me(): User|FailResult
     {
-        return $this->service->getMe();
+        return $this->api->getMe();
     }
 }

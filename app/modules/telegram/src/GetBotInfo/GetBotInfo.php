@@ -3,8 +3,8 @@
 namespace app\modules\telegram\src\GetBotInfo;
 
 use app\modules\telegram\src\Services\TelegramService;
-use Telegram\Bot\Exceptions\TelegramSDKException;
-use Telegram\Bot\Objects\User;
+use Vjik\TelegramBot\Api\FailResult;
+use Vjik\TelegramBot\Api\Type\User;
 
 class GetBotInfo implements GetBotInfoInterface
 {
@@ -15,10 +15,7 @@ class GetBotInfo implements GetBotInfoInterface
         $this->tgService = new TelegramService();
     }
 
-    /**
-     * @throws TelegramSDKException
-     */
-    public function getResponse(): User
+    public function getResponse(): User|FailResult
     {
        return $this->tgService->me();
     }
