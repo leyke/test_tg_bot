@@ -26,4 +26,21 @@ class TelegramService extends Component
     {
         return $this->api->getMe();
     }
+
+    public function getUpdates(): array|FailResult
+    {
+        return $this->api->getUpdates();
+    }
+
+    public function setWebhook(string $url): true|FailResult
+    {
+        return $this->api->setWebhook($url);
+    }
+
+    public function getWebhook()
+    {
+        return $this->api->getWebhookInfo();
+    }
+
+
 }
