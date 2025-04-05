@@ -2,18 +2,25 @@
 
 namespace app\modules\telegram\src\Console\Controllers;
 
-use app\modules\telegram\src\Services\TelegramService;
+use app\modules\telegram\src\GetUpdates\GetUpdatesFromTelegramInterface;
+use Yii;
 use yii\console\Controller;
+use yii\console\ExitCode;
 
 class ProcessController extends Controller
 {
-    public function actionExecuteUpdates() {
+    public function actionExecuteUpdates(): int
+    {
+        Yii::info(__METHOD__ . 'Done', 'telegram');
+        return ExitCode::OK;
 
     }
 
-    public function actionGetUpdates()
+    public function actionGetUpdates(GetUpdatesFromTelegramInterface $getUpdates): int
     {
-        $service = new TelegramService();
-        return $this->asJson($service->getUpdates());
+        $result = $getUpdates->loop();
+
+        Yii::info(__METHOD__ . 'Done', 'telegram');
+        return $result ? ExitCode::OK : ExitCode::UNSPECIFIED_ERROR;
     }
 }
