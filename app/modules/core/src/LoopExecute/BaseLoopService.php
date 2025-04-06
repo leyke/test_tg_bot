@@ -21,7 +21,6 @@ abstract class BaseLoopService implements LoopExecuteInterface
                 $this->execute();
 
                 $this->delay();
-                echo 'DD';
             }
 
             return true;
