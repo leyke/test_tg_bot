@@ -35,7 +35,7 @@ $config = [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['info'],
                     'categories' => ['telegram'],
-                    'logFile' =>'@app/runtime/logs/telegram-console-errors.log',
+                    'logFile' =>'@app/runtime/logs/telegram-console.log',
                     'logVars' => [],
                 ],
                 [
@@ -56,6 +56,7 @@ $config = [
             'migrationPath' => [
                 '@app/migrations',
                 '@app/modules/telegram/migrations',
+                '@app/modules/telegram_command/migrations',
             ]
         ]
     ]

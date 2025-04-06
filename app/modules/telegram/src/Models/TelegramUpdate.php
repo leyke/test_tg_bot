@@ -2,7 +2,6 @@
 
 namespace app\modules\telegram\src\Models;
 
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -10,12 +9,15 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property int $update_id
- * @property string|null $update
+ * @property array|null $update
  * @property int $is_processed
  * @property int|null $created_at
  */
 class TelegramUpdate extends ActiveRecord
 {
+    const IS_PROCESSED = 1;
+    const IS_UNPROCESSED = 0;
+
     /**
      * {@inheritdoc}
      */

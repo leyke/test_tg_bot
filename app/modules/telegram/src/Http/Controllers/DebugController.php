@@ -4,6 +4,7 @@ namespace app\modules\telegram\src\Http\Controllers;
 
 use app\modules\core\src\Controllers\BaseRestController;
 use app\modules\core\src\Interfaces\BotServiceInterface;
+use app\modules\telegram\src\ExecuteUpdates\ExecuteUpdatesFromTelegramInterface;
 use app\modules\telegram\src\GetBotInfo\GetBotInfoInterface;
 use app\modules\telegram\src\Services\TelegramService;
 use Yii;
@@ -42,5 +43,11 @@ class DebugController extends BaseRestController
     public function actionUpdates(int $lastUpdateId = null): Response
     {
         return $this->asJson($this->service->getUpdates($lastUpdateId));
+    }
+
+    public function actionAnswerAll(ExecuteUpdatesFromTelegramInterface $executor): Response
+    {
+        $executor->execute();
+        return $this->asJson('OK!');
     }
 }

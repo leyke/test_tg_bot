@@ -41,7 +41,9 @@ class TelegramService extends Component implements BotServiceInterface
         $response = $this->api->getUpdates($offset, null, $timeout);
 
         if ($response instanceof FailResult) {
+            var_dump($response);
             $this->errorLog($response);
+            return [];
         }
 
         return $response;
@@ -79,6 +81,18 @@ class TelegramService extends Component implements BotServiceInterface
         }
 
         return $response;
+    }
+
+    public function sendMsg($chatId, $msg):bool
+    {
+        $response = $this->api->sendMessage($chatId, $msg);
+
+        if ($response instanceof FailResult) {
+            $this->errorLog($response);
+            return false;
+        }
+
+        return true;
     }
 
     private function errorLog(FailResult $error): void
