@@ -3,6 +3,7 @@
 namespace app\modules\telegram\src\Services;
 
 use app\modules\core\src\Interfaces\BotServiceInterface;
+use Exception;
 use Vjik\TelegramBot\Api\FailResult;
 use Vjik\TelegramBot\Api\TelegramBotApi;
 use Vjik\TelegramBot\Api\Transport\Curl\CurlTransport;
@@ -38,10 +39,9 @@ class TelegramService extends Component implements BotServiceInterface
 
     public function getUpdates(int $offset = null, int $timeout = null): array
     {
-        $response = $this->api->getUpdates($offset, null, $timeout);
+        $response = $this->api->getUpdates($offset, null, $timeout, ['message']);
 
         if ($response instanceof FailResult) {
-            var_dump($response);
             $this->errorLog($response);
             return [];
         }
@@ -83,8 +83,13 @@ class TelegramService extends Component implements BotServiceInterface
         return $response;
     }
 
-    public function sendMsg($chatId, $msg):bool
+    /**
+     * @throws Exception
+     */
+    public function sendMsg(int $chatId, array $data = []): bool
     {
+        $msg = ArrayHelper::getValue($data, 'message');
+
         $response = $this->api->sendMessage($chatId, $msg);
 
         if ($response instanceof FailResult) {

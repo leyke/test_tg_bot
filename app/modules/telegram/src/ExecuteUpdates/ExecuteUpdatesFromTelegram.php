@@ -2,18 +2,22 @@
 
 namespace app\modules\telegram\src\ExecuteUpdates;
 
-use app\modules\core\src\Interfaces\BotServiceInterface;
 use app\modules\core\src\LoopExecute\BaseLoopService;
 use app\modules\telegram\src\Models\TelegramUpdate;
 use app\modules\telegram\src\Repositories\TelegramUpdateRepositoryInterface;
 use app\modules\telegram_command\src\Enums\CommandsEnum;
+use app\modules\telegram_command\src\Executors\Commands\CommandFactory;
 use Exception;
+use Vjik\TelegramBot\Api\Type\Update\Update;
+use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Inflector;
+use yii\helpers\Json;
 
 class ExecuteUpdatesFromTelegram extends BaseLoopService implements ExecuteUpdatesFromTelegramInterface
 {
+
     public function __construct(
-        private readonly BotServiceInterface               $service,
         private readonly TelegramUpdateRepositoryInterface $repository,
     )
     {
@@ -50,21 +54,9 @@ class ExecuteUpdatesFromTelegram extends BaseLoopService implements ExecuteUpdat
      */
     private function answerToUpdate(array $update): bool
     {
-        $chatId = ArrayHelper::getValue($update, 'message.chat.id');
         $message = ArrayHelper::getValue($update, 'message.text');
-        $type = ArrayHelper::getValue($update, 'message.entities.0.type');
-        $command = CommandsEnum::tryFrom($message);
 
-        if ($command && $type === 'bot_command') {
-            $answer = 'Ну привет';
-        } else {
-            $answer = 'Попугай говорит: ' . $message;
-        }
-
-        if ($this->service->sendMsg($chatId, $answer)) {
-            return true;
-        }
-
-        return false;
+        return CommandFactory::createExecutor(CommandsEnum::tryFrom($message))
+            ->execute($update);
     }
 }
