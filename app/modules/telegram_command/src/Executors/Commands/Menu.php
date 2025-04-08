@@ -2,16 +2,35 @@
 
 namespace app\modules\telegram_command\src\Executors\Commands;
 
+use app\modules\telegram_command\src\Enums\CommandsEnum;
 use app\modules\telegram_command\src\Executors\BaseExecutor;
 use app\modules\telegram_command\src\Executors\ExecuteInterface;
-use app\modules\telegram_command\src\Executors\ExecuteParamsDto;
-use Vjik\TelegramBot\Api\Type\Update\Update;
+use Exception;
+use Vjik\TelegramBot\Api\Type\KeyboardButton;
+use Vjik\TelegramBot\Api\Type\ReplyKeyboardMarkup;
 
 class Menu extends BaseExecutor implements ExecuteInterface
 {
-
-    function execute(array $update): bool
+    /**
+     * @throws Exception
+     */
+    public function execute(array $update): bool
     {
-        // TODO: Implement execute() method.
+        $chatId = $this->getChatId($update);
+        $keyboard = $this->createKeyboard();
+        return $this->answer($chatId, $keyboard);
+    }
+
+    private function createKeyboard(): ReplyKeyboardMarkup
+    {
+        $buttons = [[new KeyboardButton(CommandsEnum::Dog->value), new KeyboardButton(CommandsEnum::Cat->value)]];
+
+        return new ReplyKeyboardMarkup(
+            keyboard: $buttons, oneTimeKeyboard: true);
+    }
+
+    protected function answer($chatId, $data): bool
+    {
+        return $this->service->replyKeyboard($chatId, $data);
     }
 }

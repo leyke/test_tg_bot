@@ -15,9 +15,10 @@ class CommandFactory
     public static function createExecutor(?CommandsEnum $command): ExecuteInterface
     {
         return match ($command) {
-            CommandsEnum::HELLO => Yii::createObject(Hello::class),
-            CommandsEnum::MENU => Yii::createObject(Menu::class),
-            CommandsEnum::CLOSE => Yii::createObject(Close::class),
+            CommandsEnum::Hello => Yii::createObject(Hello::class),
+            CommandsEnum::Menu => Yii::createObject(Menu::class),
+            CommandsEnum::Close => Yii::createObject(Close::class),
+            CommandsEnum::Cat, CommandsEnum::Dog => Yii::createObject(MenuButton::class)->setCommand($command),
             default => Yii::createObject(CopyUserMessage::class)
         };
     }

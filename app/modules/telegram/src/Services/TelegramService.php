@@ -3,10 +3,13 @@
 namespace app\modules\telegram\src\Services;
 
 use app\modules\core\src\Interfaces\BotServiceInterface;
+use app\modules\telegram\src\ExtendedApiMethods\SendReplyKeyboard;
 use Exception;
 use Vjik\TelegramBot\Api\FailResult;
+use Vjik\TelegramBot\Api\Method\SendMessage;
 use Vjik\TelegramBot\Api\TelegramBotApi;
 use Vjik\TelegramBot\Api\Transport\Curl\CurlTransport;
+use Vjik\TelegramBot\Api\Type\InputFile;
 use Vjik\TelegramBot\Api\Type\Update\WebhookInfo;
 use Vjik\TelegramBot\Api\Type\User;
 use Yii;
@@ -91,6 +94,41 @@ class TelegramService extends Component implements BotServiceInterface
         $msg = ArrayHelper::getValue($data, 'message');
 
         $response = $this->api->sendMessage($chatId, $msg);
+
+        if ($response instanceof FailResult) {
+            $this->errorLog($response);
+            return false;
+        }
+
+        return true;
+    }
+
+    public function replyKeyboard($chatId, $keyboard): bool
+    {
+        $response = $this->api->sendMessage(
+            chatId: $chatId,
+            text: 'Отображаю меню',
+            replyMarkup: $keyboard
+        );
+
+        if ($response instanceof FailResult) {
+            $this->errorLog($response);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function sendPhoto(int $chatId, array $data): bool
+    {
+        $response = $this->api->sendPhoto(
+            chatId: $chatId,
+            photo: ArrayHelper::getValue($data, 'photo'),
+            replyMarkup: ArrayHelper::getValue($data, 'keyboard')
+        );
 
         if ($response instanceof FailResult) {
             $this->errorLog($response);
