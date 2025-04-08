@@ -5,14 +5,12 @@ namespace app\modules\telegram\src\ExecuteUpdates;
 use app\modules\core\src\LoopExecute\BaseLoopService;
 use app\modules\telegram\src\Models\TelegramUpdate;
 use app\modules\telegram\src\Repositories\TelegramUpdateRepositoryInterface;
+use app\modules\telegram_command\src\Enums\CallbacksEnum;
 use app\modules\telegram_command\src\Enums\CommandsEnum;
 use app\modules\telegram_command\src\Executors\Commands\CommandFactory;
 use Exception;
-use Vjik\TelegramBot\Api\Type\Update\Update;
-use Yii;
+use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Inflector;
-use yii\helpers\Json;
 
 class ExecuteUpdatesFromTelegram extends BaseLoopService implements ExecuteUpdatesFromTelegramInterface
 {
@@ -33,9 +31,17 @@ class ExecuteUpdatesFromTelegram extends BaseLoopService implements ExecuteUpdat
 
         $processedIds = [];
         foreach ($log as $telegramUpdate) {
-            if ($this->answerToUpdate($telegramUpdate->update)) {
-                $processedIds[] = $telegramUpdate->id;
+            if (!empty($telegramUpdate->update['message'])) {
+                if ($this->answerToMessage($telegramUpdate->update)) {
+                    $processedIds[] = $telegramUpdate->id;
+                }
             }
+            if (!empty($telegramUpdate->update['callbackQuery'])) {
+                if ($this->answerToCallback($telegramUpdate->update)) {
+                    $processedIds[] = $telegramUpdate->id;
+                }
+            }
+
         }
 
         TelegramUpdate::updateAll(['is_processed' => 1], ['is_processed' => 0, 'id' => $processedIds]);
@@ -52,11 +58,23 @@ class ExecuteUpdatesFromTelegram extends BaseLoopService implements ExecuteUpdat
     /**
      * @throws Exception
      */
-    private function answerToUpdate(array $update): bool
+    private function answerToMessage(array $update): bool
     {
         $message = ArrayHelper::getValue($update, 'message.text');
 
         return CommandFactory::createExecutor(CommandsEnum::tryFrom($message))
+            ->execute($update);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws Exception
+     */
+    private function answerToCallback(?array $update): bool
+    {
+        $data = ArrayHelper::getValue($update, 'callbackQuery.data');
+
+        return CommandFactory::createExecutorForCallback(CallbacksEnum::tryFrom($data))
             ->execute($update);
     }
 }

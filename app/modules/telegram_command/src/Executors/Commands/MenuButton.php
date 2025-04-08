@@ -9,10 +9,7 @@ use Exception;
 use Vjik\TelegramBot\Api\Type\InlineKeyboardButton;
 use Vjik\TelegramBot\Api\Type\InlineKeyboardMarkup;
 use Vjik\TelegramBot\Api\Type\InputFile;
-use Vjik\TelegramBot\Api\Type\KeyboardButton;
-use Vjik\TelegramBot\Api\Type\ReplyKeyboardMarkup;
 use Yii;
-use yii\helpers\Url;
 
 class MenuButton extends BaseExecutor implements ExecuteInterface
 {

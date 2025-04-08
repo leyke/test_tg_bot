@@ -25,7 +25,7 @@ abstract class BaseLoopService implements LoopExecuteInterface
 
             return true;
         } catch (Exception $exception) {
-            Yii::error(__METHOD__ . ' ' . $exception->getMessage(), 'telegram');
+            Yii::error(__METHOD__ . ' ' . $exception->__toString(), 'telegram');
             return false;
         }
     }

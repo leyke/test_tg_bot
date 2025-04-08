@@ -39,7 +39,7 @@ class TelegramService extends Component implements BotServiceInterface
 
     public function getUpdates(int $offset = null, int $timeout = null): array
     {
-        $response = $this->api->getUpdates($offset, null, $timeout, ['message']);
+        $response = $this->api->getUpdates($offset, null, $timeout, ['message', 'callback_query', 'inline_query']);
 
         if ($response instanceof FailResult) {
             $this->errorLog($response);

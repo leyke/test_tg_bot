@@ -4,6 +4,8 @@ namespace app\modules\telegram_command\src\Enums;
 
 enum CommandsEnum: string
 {
+    case Start = '/start';
+
     case Hello = '/hello';
     case Menu = '/menu';
     case Close = '/close';
